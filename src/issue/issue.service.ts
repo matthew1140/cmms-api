@@ -3,7 +3,7 @@ import { CreateIssueDto } from './dto/create-issue.dto';
 import { UpdateIssueDto } from './dto/update-issue.dto';
 
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryBuilder, Repository } from 'typeorm';
+import { Between, QueryBuilder, Repository } from 'typeorm';
 import { Issue } from './entities/issue.entity';
 
 interface RSCode {
@@ -54,11 +54,11 @@ export class IssueService {
     return this.issueRepos.find();
   }
   
-  findNewToday() {
+  findNewToday(type: number) {
     return this.issueRepos.createQueryBuilder('issue')
     .leftJoinAndSelect('issue.equipment', 'equipment')
     .leftJoinAndSelect('equipment.group', 'group')
-    .where('date(created) = curdate() and status=1')
+    .where('type=' + type + ' and date(created) = curdate() and status=1')
     .orderBy('issue.created', 'ASC')
     .getMany();
   }
@@ -66,6 +66,21 @@ export class IssueService {
   findProceeding() {
     return this.issueRepos.find({
       where: {
+        status: 1
+      }
+    });
+  }
+
+  findProceedingByDate(type: number, frmDate: string, toDate: string) {
+    let frm = new Date(frmDate);
+    let to = new Date(toDate);
+
+    to.setDate(to.getDate()+1)
+
+    return this.issueRepos.find({
+      where: {
+        type: type,
+        created: Between(frm, to),
         status: 1
       }
     });
@@ -87,9 +102,39 @@ export class IssueService {
     });
   }
 
-  findCancelled() {
+  findCompletedByDate(type: number, frmDate: string, toDate: string) {
+    let frm = new Date(frmDate);
+    let to = new Date(toDate);
+
+    to.setDate(to.getDate()+1)
+
     return this.issueRepos.find({
       where: {
+        created: Between(frm, to),
+        status: 3
+      }
+    });
+  }
+
+  findCancelled(type: number) {
+    return this.issueRepos.find({
+      where: {
+        type: type,
+        status: 0
+      }
+    });
+  }
+
+  findCancelledByDate(type: number, frmDate: string, toDate: string) {
+    let frm = new Date(frmDate);
+    let to = new Date(toDate);
+
+    to.setDate(to.getDate()+1)
+
+    return this.issueRepos.find({
+      where: {
+        type: type,
+        created: Between(frm, to),
         status: 0
       }
     });

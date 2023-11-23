@@ -22,14 +22,19 @@ export class IssueController {
     return this.issueService.findAll();
   }
   
-  @Get('new-today')
-  findNewToday() {
-    return this.issueService.findNewToday();
+  @Get('new-today/:type')
+  findNewToday(@Param('type') type: number) {
+    return this.issueService.findNewToday(type);
   }
 
   @Get('proceeding')
   findProceeding() {
     return this.issueService.findProceeding();
+  }
+
+  @Get('proceeding/:type/:frmDate/:toDate')
+  findProceedingByDate(@Param('type') type: number, @Param('frmDate') frmDate: string, @Param('toDate') toDate: string) {
+    return this.issueService.findProceedingByDate(type, frmDate, toDate);
   }
 
   @Get('wait-for-close')
@@ -42,9 +47,19 @@ export class IssueController {
     return this.issueService.findCompleted();
   }
 
-  @Get('cancelled')
-  findCancelled() {
-    return this.issueService.findCancelled();
+  @Get('completed/:type/:frmDate/:toDate')
+  findCompletedByDate(@Param('type') type: number, @Param('frmDate') frmDate: string, @Param('toDate') toDate: string) {
+    return this.issueService.findCompletedByDate(type, frmDate, toDate);
+  }
+
+  @Get('cancelled/:type')
+  findCancelled(@Param('type') type: number) {
+    return this.issueService.findCancelled(type);
+  }
+
+  @Get('cancelled/:type/:frmDate/:toDate')
+  findCancelledByDate(@Param('type') type: number, @Param('frmDate') frmDate: string, @Param('toDate') toDate: string) {
+    return this.issueService.findCancelledByDate(type, frmDate, toDate);
   }
 
   @Get('report1/:frmdate/:todate')

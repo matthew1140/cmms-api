@@ -10,7 +10,7 @@ export class Issue {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column('int', {default: 1})
     type: number;
 
     @Column()

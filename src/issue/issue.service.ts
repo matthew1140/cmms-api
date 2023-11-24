@@ -63,9 +63,10 @@ export class IssueService {
     .getMany();
   }
 
-  findProceeding() {
+  findProceeding(type: number) {
     return this.issueRepos.find({
       where: {
+        type: type,
         status: 1
       }
     });
@@ -110,7 +111,7 @@ export class IssueService {
 
     return this.issueRepos.find({
       where: {
-        created: Between(frm, to),
+        finishedDate: Between(frm, to),
         status: 3
       }
     });

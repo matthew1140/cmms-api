@@ -27,9 +27,9 @@ export class IssueController {
     return this.issueService.findNewToday(type);
   }
 
-  @Get('proceeding')
-  findProceeding() {
-    return this.issueService.findProceeding();
+  @Get('proceeding/:type')
+  findProceeding(@Param('type') type:number) {
+    return this.issueService.findProceeding(+type);
   }
 
   @Get('proceeding/:type/:frmDate/:toDate')
